@@ -27,14 +27,11 @@ function get_token(){
 		  'Content-type': 'application/json',
 		  'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
 		}
-		console.log(url)
 		var token_req = {
 			url: url,
 			method: 'GET',
 			headers: headers
-		}
-		console.log(JSON.stringify(token_req))
-	
+		}	
 		$task.fetch(token_req).then(resp => {
 			data = JSON.parse(resp.body);
 			token = data.message
