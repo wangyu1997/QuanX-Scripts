@@ -1,6 +1,4 @@
 var token = '';
-var token_key = 'token_key';
-
 const url = 'https://anti-epidemic.ecnu.edu.cn/clock/mini/record'
 const token_url = 'https://anti-epidemic.ecnu.edu.cn/clock/mini/wx/new?open_key='
 const id = '52195100002'
@@ -14,16 +12,7 @@ var $nobyda = nobyda();
  
  
 (async () => {
-  token = token || $nobyda.read(token_key)
-  
-  if ($nobyda.isRequest) {
-	  getCookie();
-	return;
-  }
-	console.log(token)
-
   await get_token()
-  console.log(token)
   await checkin(url, token);
   await $nobyda.time();
 })().finally(() => {
@@ -100,15 +89,6 @@ function checkin(m_url, m_token) {
 	
 	if (out) setTimeout(resolve, out)
   })
-}
-
-function getCookie() {
-  if ($request && $request.method == "GET" && $request.url.match(/mini\/record\/52195100002/)) {
-	  const sitoken = $request.headers["MiniToken"];
-	console.log(sitoken)
-	$nobyda.write(sitoken, token_key);
-	$nobyda.notify(`ECNU 获取Token成功🎉`, "", "")
-  }
 }
 
 function nobyda() {
