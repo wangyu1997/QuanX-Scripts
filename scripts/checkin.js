@@ -22,13 +22,13 @@ var $nobyda = nobyda();
   name = name || $nobyda.read(name_key)
   
   if ($nobyda.isRequest) {
-      getCookie();
-    return;
+    getCookie();
+  return;
   }
-    
+  
   if(cookie && token){
-    await checkin(url, cookie, token, name);
-    await $nobyda.time();
+  await checkin(url, cookie, token, name);
+  await $nobyda.time();
   }
 })().finally(() => {
   $nobyda.done();
@@ -38,35 +38,35 @@ var $nobyda = nobyda();
 
 function checkin(m_url, m_cookie, m_token,m_name) {
   return new Promise(resolve => {
-    var checkinurl = m_url.replace(/(auth|user|m)\/login(.php)*/g, "") + "api_mweb/user/checkin";
+  var checkinurl = m_url.replace(/(auth|user|m)\/login(.php)*/g, "") + "api_mweb/user/checkin";
 
-    var check_req = {
-      url: checkinurl,
-      headers: {
-      'AuthorizationMweb': m_token,
-      'Cookie': m_cookie,
-      'X-HTTP-Method-Override': 'PUT'
-      }
+  var check_req = {
+    url: checkinurl,
+    headers: {
+    'AuthorizationMweb': m_token,
+    'Cookie': m_cookie,
+    'X-HTTP-Method-Override': 'PUT'
     }
-    $nobyda.post(check_req, function(error, response, data) {
-      if (error) {
-      console.log(error);
-      $nobyda.notify(`${m_name} 签到失败 ${error}`, "", "")
-      } else {
-      if (data.match(/\"message\"\:/)) {
-        console.log(JSON.parse(data).message);
-        $nobyda.notify(`${m_name} ${JSON.parse(data).message}`, "", "");
-      } else if (data.match(/login/)) {
-        console.log(data);
-        $nobyda.notify(`${m_name} ⚠️Cookie失效啦，请重新获取Cookie`, "", "")
-      } else {
-        console.log(data);
-        $nobyda.notify(`${m_name} ⚠️签到失败，某些地方出错啦，请查看日志`, "", "")
-      }
-      }
-      resolve()
-    })
-    if (out) setTimeout(resolve, out)
+  }
+  $nobyda.post(check_req, function(error, response, data) {
+    if (error) {
+    console.log(error);
+    $nobyda.notify(`${m_name} 签到失败 ${error}`, "", "")
+    } else {
+    if (data.match(/\"message\"\:/)) {
+    console.log(JSON.parse(data).message);
+    $nobyda.notify(`${m_name} ${JSON.parse(data).message}`, "", "");
+    } else if (data.match(/login/)) {
+    console.log(data);
+    $nobyda.notify(`${m_name} ⚠️Cookie失效啦，请重新获取Cookie`, "", "")
+    } else {
+    console.log(data);
+    $nobyda.notify(`${m_name} ⚠️签到失败，某些地方出错啦，请查看日志`, "", "")
+    }
+    }
+    resolve()
+  })
+  if (out) setTimeout(resolve, out)
   })
 }
 
@@ -95,12 +95,12 @@ function nobyda() {
   const isNode = typeof require == "function" && !isJSBox;
   const node = (() => {
   if (isNode) {
-    const request = require('request');
-    return ({
-    request
-    })
+  const request = require('request');
+  return ({
+  request
+  })
   } else {
-    return null
+  return null
   }
   })()
   const notify = (title, subtitle, message) => {
@@ -108,8 +108,8 @@ function nobyda() {
   if (isSurge) $notification.post(title, subtitle, message)
   if (isNode) log('\n' + title + '\n' + subtitle + '\n' + message)
   if (isJSBox) $push.schedule({
-    title: title,
-    body: subtitle ? subtitle + "\n" + message : message
+  title: title,
+  body: subtitle ? subtitle + "\n" + message : message
   })
   }
   const write = (value, key) => {
@@ -122,121 +122,121 @@ function nobyda() {
   }
   const adapterStatus = (response) => {
   if (response) {
-    if (response.status) {
-    response["statusCode"] = response.status
-    } else if (response.statusCode) {
-    response["status"] = response.statusCode
-    }
+  if (response.status) {
+  response["statusCode"] = response.status
+  } else if (response.statusCode) {
+  response["status"] = response.statusCode
+  }
   }
   return response
   }
   const get = (options, callback) => {
   if (isQuanX) {
-    if (typeof options == "string") options = {
-    url: options
-    }
-    options["method"] = "GET"
-    $task.fetch(options).then(response => {
-    callback(null, adapterStatus(response), response.body)
-    }, reason => callback(reason.error, null, null))
+  if (typeof options == "string") options = {
+  url: options
+  }
+  options["method"] = "GET"
+  $task.fetch(options).then(response => {
+  callback(null, adapterStatus(response), response.body)
+  }, reason => callback(reason.error, null, null))
   }
   if (isSurge) $httpClient.get(options, (error, response, body) => {
-    callback(error, adapterStatus(response), body)
+  callback(error, adapterStatus(response), body)
   })
   if (isNode) {
-    node.request(options, (error, response, body) => {
-    callback(error, adapterStatus(response), body)
-    })
+  node.request(options, (error, response, body) => {
+  callback(error, adapterStatus(response), body)
+  })
   }
   if (isJSBox) {
-    if (typeof options == "string") options = {
-    url: options
-    }
-    options["header"] = options["headers"]
-    options["handler"] = function(resp) {
-    let error = resp.error;
-    if (error) error = JSON.stringify(resp.error)
-    let body = resp.data;
-    if (typeof body == "object") body = JSON.stringify(resp.data);
-    callback(error, adapterStatus(resp.response), body)
-    };
-    $http.get(options);
+  if (typeof options == "string") options = {
+  url: options
+  }
+  options["header"] = options["headers"]
+  options["handler"] = function(resp) {
+  let error = resp.error;
+  if (error) error = JSON.stringify(resp.error)
+  let body = resp.data;
+  if (typeof body == "object") body = JSON.stringify(resp.data);
+  callback(error, adapterStatus(resp.response), body)
+  };
+  $http.get(options);
   }
   }
   const post = (options, callback) => {
   if (!options.body) options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   if (isQuanX) {
-    if (typeof options == "string") options = {
-    url: options
-    }
-    options["method"] = "POST"
-    $task.fetch(options).then(response => {
-    callback(null, adapterStatus(response), response.body)
-    }, reason => callback(reason.error, null, null))
+  if (typeof options == "string") options = {
+  url: options
+  }
+  options["method"] = "POST"
+  $task.fetch(options).then(response => {
+  callback(null, adapterStatus(response), response.body)
+  }, reason => callback(reason.error, null, null))
   }
   if (isSurge) {
-    options.headers['X-Surge-Skip-Scripting'] = false
-    $httpClient.post(options, (error, response, body) => {
-    callback(error, adapterStatus(response), body)
-    })
+  options.headers['X-Surge-Skip-Scripting'] = false
+  $httpClient.post(options, (error, response, body) => {
+  callback(error, adapterStatus(response), body)
+  })
   }
   if (isNode) {
-    node.request.post(options, (error, response, body) => {
-    callback(error, adapterStatus(response), body)
-    })
+  node.request.post(options, (error, response, body) => {
+  callback(error, adapterStatus(response), body)
+  })
   }
   if (isJSBox) {
-    if (typeof options == "string") options = {
+  if (typeof options == "string") options = {
+  url: options
+  }
+  options["header"] = options["headers"]
+  options["handler"] = function(resp) {
+  let error = resp.error;
+  if (error) error = JSON.stringify(resp.error)
+  let body = resp.data;
+  if (typeof body == "object") body = JSON.stringify(resp.data)
+  callback(error, adapterStatus(resp.response), body)
+  }
+  $http.post(options);
+  }
+  }
+  
+  const put = (options, callback) => {
+  if (!options.body) options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  if (isQuanX) {
+  if (typeof options == "string") options = {
     url: options
-    }
-    options["header"] = options["headers"]
-    options["handler"] = function(resp) {
+  }
+  options["method"] = "PUT"
+  $task.fetch(options).then(response => {
+    callback(null, adapterStatus(response), response.body)
+  }, reason => callback(reason.error, null, null))
+  }
+  if (isSurge) {
+  options.headers['X-Surge-Skip-Scripting'] = false
+  $httpClient.put(options, (error, response, body) => {
+    callback(error, adapterStatus(response), body)
+  })
+  }
+  if (isNode) {
+  node.request.put(options, (error, response, body) => {
+    callback(error, adapterStatus(response), body)
+  })
+  }
+  if (isJSBox) {
+  if (typeof options == "string") options = {
+    url: options
+  }
+  options["header"] = options["headers"]
+  options["handler"] = function(resp) {
     let error = resp.error;
     if (error) error = JSON.stringify(resp.error)
     let body = resp.data;
     if (typeof body == "object") body = JSON.stringify(resp.data)
     callback(error, adapterStatus(resp.response), body)
-    }
-    $http.post(options);
   }
+  $http.put(options);
   }
-  
-  const put = (options, callback) => {
-    if (!options.body) options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    if (isQuanX) {
-    if (typeof options == "string") options = {
-      url: options
-    }
-    options["method"] = "PUT"
-    $task.fetch(options).then(response => {
-      callback(null, adapterStatus(response), response.body)
-    }, reason => callback(reason.error, null, null))
-    }
-    if (isSurge) {
-    options.headers['X-Surge-Skip-Scripting'] = false
-    $httpClient.put(options, (error, response, body) => {
-      callback(error, adapterStatus(response), body)
-    })
-    }
-    if (isNode) {
-    node.request.put(options, (error, response, body) => {
-      callback(error, adapterStatus(response), body)
-    })
-    }
-    if (isJSBox) {
-    if (typeof options == "string") options = {
-      url: options
-    }
-    options["header"] = options["headers"]
-    options["handler"] = function(resp) {
-      let error = resp.error;
-      if (error) error = JSON.stringify(resp.error)
-      let body = resp.data;
-      if (typeof body == "object") body = JSON.stringify(resp.data)
-      callback(error, adapterStatus(resp.response), body)
-    }
-    $http.put(options);
-    }
   }
  
   const log = (message) => console.log(message)

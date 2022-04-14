@@ -1,24 +1,8 @@
-[rewrite_local]
-# > 机场Cookie获取
-
-https:\/\/cloud\.faster\.buzz url script-request-header https://raw.githubusercontent.com/wangyu1997/QuanX-Scripts/master/rewrite/buzz.js
-
-[mitm] 
-hostname = *.faster.buzz
-
-[task_local]
-5 5 * * * https://raw.githubusercontent.com/wangyu1997/QuanX-Scripts/master/rewrite/buzz.js, tag=速蛙云签到, img-url=https://raw.githubusercontent.com/erdongchanyo/icon/main/Policy-Country/US.png, enabled=true
-
-
-var cookie = '';
 var token = '';
-var url = '';
-var name = '';
+var token_key = 'token_key';
 
-var name_key = 'evil_checkincktitle';
-const signurl = 'evil_checkinurl';
-const cookie_key  = 'cookie_key';
-const token_key = 'token_key';
+const url = 'https://anti-epidemic.ecnu.edu.cn/clock/mini/record'
+const id = '52195100002'
  
 const timestamp = new Date().getTime()
  
@@ -28,18 +12,15 @@ var $nobyda = nobyda();
  
  
 (async () => {
-  cookie = cookie || $nobyda.read(cookie_key)
   token = token || $nobyda.read(token_key)
-  url = url || $nobyda.read(signurl)
-  name = name || $nobyda.read(name_key)
   
   if ($nobyda.isRequest) {
 	  getCookie();
 	return;
   }
 	
-  if(cookie && token){
-	await checkin(url, cookie, token, name);
+  if(token){
+	await checkin(url, token);
 	await $nobyda.time();
   }
 })().finally(() => {
@@ -48,54 +29,54 @@ var $nobyda = nobyda();
  
 
 
-function checkin(m_url, m_cookie, m_token,m_name) {
+function checkin(m_url, m_token) {
   return new Promise(resolve => {
-	var checkinurl = m_url.replace(/(auth|user|m)\/login(.php)*/g, "") + "api_mweb/user/checkin";
-
-	var check_req = {
-	  url: checkinurl,
-	  headers: {
-	  'AuthorizationMweb': m_token,
-	  'Cookie': m_cookie,
-	  'X-HTTP-Method-Override': 'PUT'
-	  }
+	// const log_token = md5(`${name}${id}ecnu1024`)
+	var payload = {
+		"number": id,
+		"location": "在学校",
+		"health": "健康，未超过37.3",
+		"recordTime": timestamp,
+		"token": 'b4137c889af0689b6451a00cc7d673fd'
 	}
-	$nobyda.post(check_req, function(error, response, data) {
-	  if (error) {
-	  console.log(error);
-	  $nobyda.notify(`${m_name} 签到失败 ${error}`, "", "")
-	  } else {
-	  if (data.match(/\"message\"\:/)) {
-		console.log(JSON.parse(data).message);
-		$nobyda.notify(`${m_name} ${JSON.parse(data).message}`, "", "");
-	  } else if (data.match(/login/)) {
-		console.log(data);
-		$nobyda.notify(`${m_name} ⚠️Cookie失效啦，请重新获取Cookie`, "", "")
-	  } else {
-		console.log(data);
-		$nobyda.notify(`${m_name} ⚠️签到失败，某些地方出错啦，请查看日志`, "", "")
-	  }
-	  }
-	  resolve()
+	headers = {
+	  'Content-type': 'application/json',
+	  'MiniToken': m_token,
+	  'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+	}
+	var login_req = {
+		url: m_url,
+		method: 'PUT',
+		headers: headers,
+		body: JSON.stringify(payload)
+	}
+
+	$task.fetch(login_req).then(resp => {
+		data = JSON.parse(resp.body);
+		console.log(data.message)
+		$nobyda.notify(`ECNU ${data.message}`, "", "")
+	}).catch((err) => {
+	  const error = '账号信息获取失败⚠️';
+	  console.log(error + '\n' + JSON.stringify(err));
+	  $nobyda.notify(`ECNU ${head+error}请查看日志‼️`);
 	})
+	.finally(() => {
+	  resolve();
+	});
+	
 	if (out) setTimeout(resolve, out)
   })
 }
 
 function getCookie() {
-  if ($request && $request.method != "OPTIONS" && $request.url.match(/check/)) {
-  const sicookie = $request.headers["Cookie"];
-  const siauthtoken = $request.headers["AuthorizationMweb"];
-  
-  console.log(sicookie);
-  console.log(siauthtoken);
-  
-  $nobyda.write(sicookie, cookie_key);
-  $nobyda.write(siauthtoken, token_key);
-  $nobyda.notify(`速蛙云 获取Cookie和Token成功🎉`, "", "")
+  if ($request && $request.method == "GET" && $request.url.match(/mini\/record\/52195100002/)) {
+	  const sitoken = $request.headers["MiniToken"];
+	console.log(sitoken)
+	$nobyda.write(sitoken, token_key);
+	$nobyda.notify(`ECNU 获取Token成功🎉`, "", "")
   }
 }
- 
+
 function nobyda() {
   const times = 0
   const start = Date.now()
@@ -175,6 +156,7 @@ function nobyda() {
 	$http.get(options);
   }
   }
+  
   const post = (options, callback) => {
   if (!options.body) options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   if (isQuanX) {
@@ -213,44 +195,45 @@ function nobyda() {
   }
   }
   
+  
   const put = (options, callback) => {
 	if (!options.body) options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 	if (isQuanX) {
-	if (typeof options == "string") options = {
+	  if (typeof options == "string") options = {
 	  url: options
-	}
-	options["method"] = "PUT"
-	$task.fetch(options).then(response => {
+	  }
+	  options["method"] = "PUT"
+	  $task.fetch(options).then(response => {
 	  callback(null, adapterStatus(response), response.body)
-	}, reason => callback(reason.error, null, null))
+	  }, reason => callback(reason.error, null, null))
 	}
 	if (isSurge) {
-	options.headers['X-Surge-Skip-Scripting'] = false
-	$httpClient.put(options, (error, response, body) => {
+	  options.headers['X-Surge-Skip-Scripting'] = false
+	  $httpClient.post(options, (error, response, body) => {
 	  callback(error, adapterStatus(response), body)
-	})
+	  })
 	}
 	if (isNode) {
-	node.request.put(options, (error, response, body) => {
+	  node.request.post(options, (error, response, body) => {
 	  callback(error, adapterStatus(response), body)
-	})
+	  })
 	}
 	if (isJSBox) {
-	if (typeof options == "string") options = {
+	  if (typeof options == "string") options = {
 	  url: options
-	}
-	options["header"] = options["headers"]
-	options["handler"] = function(resp) {
+	  }
+	  options["header"] = options["headers"]
+	  options["handler"] = function(resp) {
 	  let error = resp.error;
 	  if (error) error = JSON.stringify(resp.error)
 	  let body = resp.data;
 	  if (typeof body == "object") body = JSON.stringify(resp.data)
 	  callback(error, adapterStatus(resp.response), body)
+	  }
+	  $http.post(options);
 	}
-	$http.put(options);
 	}
-  }
- 
+  
   const log = (message) => console.log(message)
   const time = () => {
   const end = ((Date.now() - start) / 1000).toFixed(2)
