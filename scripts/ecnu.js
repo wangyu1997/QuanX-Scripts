@@ -2,7 +2,9 @@ var token = '';
 var token_key = 'token_key';
 
 const url = 'https://anti-epidemic.ecnu.edu.cn/clock/mini/record'
+const token_url = 'https://anti-epidemic.ecnu.edu.cn/clock/mini/wx/new?open_key='
 const id = '52195100002'
+const openKey = '6257fcacfdb4b51b5c4e649d'
  
 const timestamp = new Date().getTime()
  
@@ -18,15 +20,47 @@ var $nobyda = nobyda();
 	  getCookie();
 	return;
   }
-	
-  if(token){
-	await checkin(url, token);
-	await $nobyda.time();
-  }
+	console.log(token)
+
+  await get_token()
+  console.log(token)
+  await checkin(url, token);
+  await $nobyda.time();
 })().finally(() => {
   $nobyda.done();
 })
  
+ 
+function get_token(){
+	return new Promise(resolve => {
+		var url = `${token_url}${openKey}`
+		headers = {
+		  'Content-type': 'application/json',
+		  'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+		}
+		console.log(url)
+		var token_req = {
+			url: url,
+			method: 'GET',
+			headers: headers
+		}
+		console.log(JSON.stringify(token_req))
+	
+		$task.fetch(token_req).then(resp => {
+			data = JSON.parse(resp.body);
+			token = data.message
+		}).catch((err) => {
+		  const error = 'MiniToken获取失败⚠️';
+		  console.log(error + '\n' + JSON.stringify(err));
+		  $nobyda.notify(`ECNU ${head+error}请查看日志‼️`);
+		})
+		.finally(() => {
+		  resolve();
+		});
+		
+		if (out) setTimeout(resolve, out)
+	  })
+}
 
 
 function checkin(m_url, m_token) {
