@@ -212,7 +212,7 @@ function getCookie() {
   if ($request && $request.method != "OPTIONS" && $request.url.match(/check/)) {
     const sicookie = $request.headers["Cookie"];
     const siauthtoken = $request.headers["authorizationmweb"];
-
+	console.log($request.headers)
     console.log(sicookie);
     console.log(siauthtoken);
     $.setdata(sicookie, signcookie);
