@@ -4,7 +4,6 @@ var token = '';
 var token_key = 'token_key';
 
 const url = 'https://anti-epidemic.ecnu.edu.cn/clock/mini/record'
-const name = '王宇'
 const id = '52195100002'
  
 const timestamp = new Date().getTime()
@@ -46,34 +45,49 @@ function checkin(m_url, m_token) {
 		"token": 'b4137c889af0689b6451a00cc7d673fd'
 	}
 	console.log(payload)
+	console.log(timestamp)
 	var login_req = {
-	  url: m_url,
-	  headers: {
-	  'Accept': 'application/json',
-	  'Content-type': 'application/json',
-	  'MiniToken': m_token,
-	  },
-	  body: JSON.stringify(payload)
+		url: m_url,
+		method: 'PUT',
+		headers: {
+		  'Content-type': 'application/json',
+		  'MiniToken': m_token,
+		},
+		body: JSON.stringify(payload)
 	}
-	$.http.put(login_req)
-	.then((resp) => {
-	  console.log(resp)
-	  console.log(resp.body)
-	  console.log($.toStr(resp.body))
-	  // $.log(`\nTotal body: \n${$.toStr(resp)}`);
-	  // data = $.toObj(resp.body);
-	  // console.log(data)
-	  // total = data.body.tripCoins;
-	  // info += `无忧币总计：${total}💰\n`;
-	})
-	.catch((err) => {
+	console.log(JSON.stringify(payload))
+	console.log(m_url)
+	$task.fetch(login_req).then(resp => {
+	  	console.log(resp)
+		console.log(resp.body)
+		console.log($.toStr(resp.body))
+	}).catch((err) => {
 	  const error = '账号信息获取失败⚠️';
-	  $.error(error + '\n' + err);
+	  $.error(error + '\n' + $.toStr(err));
 	  $.notify($.name, '', `${head+error}请查看日志‼️`);
 	})
 	.finally(() => {
 	  resolve();
 	});
+	// $.http.put(login_req)
+	// .then((resp) => {
+	//   console.log(resp)
+	//   console.log(resp.body)
+	//   console.log($.toStr(resp.body))
+	//   // $.log(`\nTotal body: \n${$.toStr(resp)}`);
+	//   // data = $.toObj(resp.body);
+	//   // console.log(data)
+	//   // total = data.body.tripCoins;
+	//   // info += `无忧币总计：${total}💰\n`;
+	// })
+	// .catch((err) => {
+	//   const error = '账号信息获取失败⚠️';
+	//   $.error(error + '\n' + err);
+	//   $.notify($.name, '', `${head+error}请查看日志‼️`);
+	// })
+	// .finally(() => {
+	//   resolve();
+	// });
 	
 	if (out) setTimeout(resolve, out)
   })
