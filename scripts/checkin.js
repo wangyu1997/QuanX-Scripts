@@ -55,11 +55,11 @@ function checkin(m_url, m_cookie, m_token,m_name) {
     } else {
     if (data.match(/\"message\"\:/)) {
       data = JSON.parse(data);
-      var message = ''
+      var message = '';
       if(data.message){
         message = data.message;
       }else{
-        message = data.data.message'
+        message = data.data.message;
       }
       console.log(message);
       $nobyda.notify(`${m_name} ${message}`, "", "");
