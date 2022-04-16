@@ -54,8 +54,15 @@ function checkin(m_url, m_cookie, m_token,m_name) {
     $nobyda.notify(`${m_name} 签到失败 ${error}`, "", "")
     } else {
     if (data.match(/\"message\"\:/)) {
-    console.log(JSON.parse(data).message);
-    $nobyda.notify(`${m_name} ${JSON.parse(data).message}`, "", "");
+      data = JSON.parse(data);
+      var message = ''
+      if(data.message){
+        message = data.message;
+      }else{
+        message = data.data.message'
+      }
+      console.log(message);
+      $nobyda.notify(`${m_name} ${message}`, "", "");
     } else if (data.match(/login/)) {
     console.log(data);
     $nobyda.notify(`${m_name} ⚠️Cookie失效啦，请重新获取Cookie`, "", "")
