@@ -1,0 +1,8 @@
+proxies:
+  - name: 🎶 解锁
+    type: http
+    server: h4.noway.top
+    port: 8989
+    cipher: aes-128-gcm
+
+
