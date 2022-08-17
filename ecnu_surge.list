@@ -5,4 +5,4 @@ DOMAIN-SUFFIX,ecnu.edu.cn
 IP-CIDR,58.198.0.0/16,no-resolve
 IP-CIDR,10.11.6.0/24,no-resolve
 IP-CIDR,219.228.0.0/16,no-resolve
-IP-CIDR,202.120.83.0/24,no-resolve
+IP-CIDR,202.120.0.0/16,no-resolve
