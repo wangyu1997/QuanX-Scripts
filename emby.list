@@ -1,2 +1,13 @@
+# 关键字匹配
+DOMAIN-KEYWORD,emby
+
+# 终点站
 DOMAIN-SUFFIX,emby.wtf
 DOMAIN-SUFFIX,880660.xyz
+
+# Misty
+DOMAIN-SUFFIX,de.aaa.ax
+
+# PornEmby
+DOMAIN-SUFFIX,pornemby.club
+
