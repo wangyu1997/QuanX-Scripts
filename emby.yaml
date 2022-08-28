@@ -8,6 +8,20 @@
 # IP-CIDR: 10
 # PROCESS-NAME: 6
 # TOTAL: 480
+
+
 payload:
+  # 关键字匹配
+  - DOMAIN-KEYWORD,emby
+  
+  # 终点站
   - DOMAIN-SUFFIX,emby.wtf
   - DOMAIN-SUFFIX,880660.xyz
+  
+  # Misty
+  -DOMAIN-SUFFIX,aaa.ax
+
+  # PornEmby
+  -DOMAIN-SUFFIX,pornemby.club
+
+
