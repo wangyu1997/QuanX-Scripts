@@ -1,12 +1,12 @@
 # 关键字匹配
-HOST-KEYWORD,emby
+HOST-KEYWORD,emby,Emby
 
 # 终点站
 HOST-SUFFIX,emby.wtf,Emby
 HOST-SUFFIX,880660.xyz,Emby
 
 # Misty
-HOST-SUFFIX,aaa.ax
+HOST-SUFFIX,aaa.ax,Emby
 
 # PornEmby
-HOST-SUFFIX,pornemby.club
+HOST-SUFFIX,pornemby.club,Emby
