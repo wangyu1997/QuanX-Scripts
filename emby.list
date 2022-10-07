@@ -11,3 +11,9 @@ DOMAIN-SUFFIX,aaa.ax
 # PornEmby
 DOMAIN-SUFFIX,pornemby.club
 
+# infuse加速
+DOMAIN-SUFFIX,themoviedb.org
+DOMAIN-SUFFIX,tmdb.org
+DOMAIN-SUFFIX,thetvdb.com
+DOMAIN-SUFFIX,fanart.tv
+
