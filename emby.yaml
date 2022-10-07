@@ -16,5 +16,9 @@ payload:
   - DOMAIN-SUFFIX,880660.xyz
   - DOMAIN-SUFFIX,aaa.ax
   - DOMAIN-SUFFIX,pornemby.club
+  - DOMAIN-SUFFIX,themoviedb.org
+  - DOMAIN-SUFFIX,tmdb.org
+  - DOMAIN-SUFFIX,thetvdb.com
+  - DOMAIN-SUFFIX,fanart.tv
 
 
