@@ -10,3 +10,9 @@ HOST-SUFFIX,aaa.ax,Emby
 
 # PornEmby
 HOST-SUFFIX,pornemby.club,Emby
+
+
+HOST-SUFFIX,themoviedb.org,Emby
+HOST-SUFFIX,tmdb.org,Emby
+HOST-SUFFIX,thetvdb.com,Emby
+HOST-SUFFIX,fanart.tv,Emby
